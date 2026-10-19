@@ -52,21 +52,15 @@ Type `chrome://extensions` in the address bar and press Enter.
 
 Flip the **Developer mode** toggle in the top-right corner.
 
-![Developer mode toggle](docs/step3-developer-mode.png)
-
 ### 4. Load the extension
 
 Click **Load unpacked** (top-left) and choose the folder you unzipped — the one
 that contains `manifest.json` (the repo's own root, not its parent).
 
-![Load unpacked](docs/step4-load-unpacked.png)
-
 ### 5. Pin it and set your location
 
 Pin the extension from the puzzle-piece menu, click its icon, and set your
 location — type coordinates, or press **My location** and allow geolocation.
-
-![The extension loaded](docs/step5-loaded.png)
 
 That's it. The popup shows your local prayer times, the countdown to the next
 waqt, and the azan fires at the waqt (or at your chosen delay).
