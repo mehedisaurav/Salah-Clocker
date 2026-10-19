@@ -1,0 +1,536 @@
+:root {
+  --text: #262b3d;
+  --muted: #6b7186;
+  --card: #ffffff;
+  --border: #e6e8f0;
+  --accent: #5e35b1;
+  --warn: #c62828;
+}
+
+body.dark {
+  --text: #e9ebf8;
+  --muted: #a6adc9;
+  --card: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.12);
+  --warn: #ff8a80;
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #fafafa;
+  color: var(--text);
+}
+
+header {
+  padding: 14px 16px 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+h1 {
+  font-size: 12px;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ================= popup (over the natural sky) ================= */
+
+:root {
+  --sky-text: #ffffff;
+  --sky-muted: rgba(255, 255, 255, 0.85);
+  --sky-faint: rgba(255, 255, 255, 0.68);
+  --sky-card: rgba(255, 255, 255, 0.14);
+  --sky-card-border: rgba(255, 255, 255, 0.22);
+  --sky-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --sky-accent: #ffd54f;
+}
+
+/* Bright sky photos get dark text + a light scrim (decided by
+   popup.js measuring the photo's top-strip luminance). */
+body.sky-light {
+  --sky-text: #1b2338;
+  --sky-muted: rgba(27, 35, 56, 0.78);
+  --sky-faint: rgba(27, 35, 56, 0.6);
+  --sky-card: rgba(255, 255, 255, 0.42);
+  --sky-card-border: rgba(255, 255, 255, 0.55);
+  --sky-shadow: 0 1px 8px rgba(255, 255, 255, 0.45);
+  --sky-accent: #8a5a00;
+}
+
+/* Sky photo layer behind everything: scrim + photo. */
+body:not(.options)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--sky-scrim, linear-gradient(rgba(8,12,32,.42), rgba(8,12,32,.58))),
+    var(--sky-img, none) center/cover no-repeat;
+}
+
+body:not(.options) { width: 300px; color: var(--sky-text); }
+body:not(.options) h1 { color: var(--sky-muted); }
+
+#city { font-size: 11px; color: var(--sky-muted); display: flex; align-items: center; gap: 4px; min-width: 0; }
+#city-icon { width: 12px; height: 12px; flex: none; }
+/* The place name sits above its coordinates. */
+.city-text { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; min-width: 0; }
+#city-name { font-weight: 600; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#city-coords { font-size: 9px; opacity: 0.75; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.clock { text-align: center; padding: 8px 0 10px; }
+
+/* sunrise (left) · clock (middle) · sunset (right) */
+.sky-times {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+}
+.edge { text-align: center; width: 76px; }
+.edge img { width: 38px; height: 38px; display: block; margin: 0 auto; }
+.edge-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--sky-faint);
+  margin-top: 2px;
+}
+.edge-time {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--sky-text);
+}
+.clock-center { flex: 1; }
+#clock {
+  font-size: 30px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-shadow: var(--sky-shadow);
+  white-space: nowrap;
+  color: var(--sky-text);
+}
+#gdate { font-size: 11px; color: var(--sky-muted); }
+#hijri {
+  font-size: 14px;
+  color: var(--sky-accent);
+  font-weight: 700;
+  margin-top: 3px;
+  text-shadow: var(--sky-shadow);
+}
+
+/* Expanded "View All Waqt": only the vertical waqt panel list */
+body.expanded #current-card,
+body.expanded #next-card { display: none; }
+
+.waqt {
+  margin: 6px 14px;
+  background: var(--sky-card);
+  border: 1px solid var(--sky-card-border);
+  border-left: 4px solid var(--sky-card-border);
+  border-radius: 12px;
+  padding: 8px 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.waqt .label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--sky-faint);
+}
+.waqt .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 3px;
+}
+.waqt .name { font-size: 16px; font-weight: 700; }
+.waqt .time { font-size: 15px; font-variant-numeric: tabular-nums; color: var(--sky-muted); }
+.waqt .name-wrap { display: inline-flex; align-items: center; gap: 6px; }
+/* Marks an azan the user has delayed, so the time beside it is not mistaken
+   for the start of the waqt. */
+.delay-chip {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: var(--sky-card);
+  border: 1px solid var(--sky-card-border);
+  color: var(--sky-muted);
+  white-space: nowrap;
+}
+#countdown {
+  text-align: right;
+  font-size: 12px;
+  color: var(--sky-faint);
+  font-variant-numeric: tabular-nums;
+  margin-top: 2px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 10px 16px 12px;
+}
+.footer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+button.expand {
+  border: 1px solid var(--sky-card-border);
+  background: var(--sky-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--sky-text);
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+button.expand:hover { background: rgba(255, 255, 255, 0.24); }
+
+/* settings gear + sliding options panel */
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--sky-card-border);
+  background: var(--sky-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--sky-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.icon-btn:hover { filter: brightness(1.15); }
+.icon-btn svg { width: 16px; height: 16px; }
+
+#settings-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.32s ease;
+}
+#settings-panel.open { transform: translateX(0); }
+.settings-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e6e8f0;
+  background: #fafafa;
+}
+.settings-bar .icon-btn {
+  border: 1px solid #e6e8f0;
+  background: #ffffff;
+  color: #262b3d;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.settings-title { font-size: 13px; font-weight: 700; color: #262b3d; }
+#options-frame { flex: 1; width: 100%; border: none; background: #fafafa; }
+
+html, body { overflow-x: hidden; }
+
+/* --- azan alarm banner --- */
+#alarm {
+  margin: 8px 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 193, 7, 0.28);
+  border: 1px solid rgba(255, 213, 79, 0.85);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #fff;
+}
+#alarm-icon { width: 28px; height: 28px; flex: none; }
+#alarm-text { flex: 1; font-size: 12px; font-weight: 700; }
+#alarm-snooze,
+#alarm-stop {
+  border: none;
+  border-radius: 14px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+}
+#alarm-snooze { background: rgba(255, 255, 255, 0.28); }
+#alarm-stop { background: rgba(198, 40, 40, 0.85); }
+
+/* --- prohibited (makrūh) banner --- */
+#prohibited {
+  margin: 8px 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(198, 40, 40, 0.32);
+  border: 1px solid rgba(255, 82, 82, 0.85);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+.pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5252;
+  flex: none;
+  animation: pulse 1.2s infinite;
+}
+
+/* --- panel states (inline colors need !important to override) --- */
+.waqt.alarm {
+  background: rgba(255, 213, 79, 0.3) !important;
+  border-left-color: #ffd54f !important;
+  animation: shake 0.9s infinite;
+}
+.waqt.prohibited {
+  background: rgba(198, 40, 40, 0.38) !important;
+  border-left-color: #ff5252 !important;
+}
+.slot.prohibited {
+  background: rgba(198, 40, 40, 0.42);
+  border-color: rgba(255, 82, 82, 0.9);
+}
+/* alarm comes last: an active azan signal wins over the prohibited tint */
+.slot.alarm {
+  background: rgba(255, 213, 79, 0.38);
+  border-color: rgba(255, 213, 79, 0.9);
+  animation: shake 0.9s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* --- inline "View All Waqt" grid: vertical panels, full widget width --- */
+#all-waqt { margin: 0 14px 10px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.slot {
+  background: var(--sky-card);
+  border: 1px solid var(--sky-card-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  padding: 9px 12px 9px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--sky-text);
+}
+.slot .sname { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.slot .scolor {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.slot .stime {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--sky-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+/* "azan 1:45 PM" under a delayed waqt's real time. */
+.slot .sazan {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--sky-faint);
+  white-space: nowrap;
+}
+.slot.current { background: rgba(255, 255, 255, 0.3); border-color: rgba(255, 255, 255, 0.55); }
+
+/* ================= options ================= */
+/* Fluid: the same page fills the popup's narrow settings panel and, in a
+   full-width browser tab, centres itself at a comfortable reading width
+   instead of stretching edge to edge. */
+body.options { width: 100%; max-width: 440px; margin: 0 auto; padding: 12px 16px 20px; }
+body.options h1 { margin-bottom: 10px; }
+
+.field { margin-bottom: 14px; }
+.field > label:first-child {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.field select,
+.field input[type="number"],
+.field input[type="text"],
+.field input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+}
+.field .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+}
+.field .row select,
+.field .row input { flex: 1 1 8rem; min-width: 0; }
+.field .row button { flex: 1 1 auto; min-width: 0; }
+/* Button pairs (use-my-location + save) are two equal columns — same width,
+   same height — that drop to one column when the panel is too narrow. */
+.field .row.actions { display: grid; grid-template-columns: 1fr 1fr; }
+.field .row.actions button {
+  width: auto;
+  min-height: 38px;
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+@media (max-width: 250px) {
+  .field .row.actions { grid-template-columns: 1fr; }
+}
+.field button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.field button.link { padding: 8px 4px; border: none; color: var(--muted); text-decoration: underline; }
+/* A second-level label inside a field (e.g. the hadith translation choice). */
+.field > label.sub {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 8px 0 4px;
+}
+.hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.hint.warn { color: var(--warn); font-weight: 600; }
+
+.toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+/* Azan timing: a per-waqt toggle, a live readout and a delay slider. */
+.delays { display: grid; gap: 10px; }
+.delays-row { display: grid; gap: 1px; }
+.delay-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.delays-row .toggle { flex: 0 0 auto; }
+.delay-value { font-size: 11px; font-weight: 600; color: var(--accent); }
+.delay-value.off { color: var(--muted); font-weight: 400; }
+.delay-range { display: flex; justify-content: space-between; font-size: 9px; color: var(--muted); }
+.delays-row input[type="range"]:disabled { opacity: 0.45; }
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.toggle input { margin: 0; }
+
+input[type="range"] { width: 100%; }
+input[type="color"] {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  padding: 2px;
+}
+
+button.primary {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.primary:hover { filter: brightness(1.1); }
+
+button.secondary {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+/* makruh fields */
+.makruh { display: grid; gap: 8px; }
+.makruh-item {
+  display: grid;
+  grid-template-columns: 70px 60px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text);
+}
+.makruh-item small { color: var(--muted); font-size: 10px; }
+.makruh-item input {
+  width: 60px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+}

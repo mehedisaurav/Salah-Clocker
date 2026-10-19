@@ -1,0 +1,16 @@
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Node (the tests need no dependencies, but just in case)
+node_modules/
+npm-debug.log*
