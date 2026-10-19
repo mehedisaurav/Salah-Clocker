@@ -56,8 +56,8 @@ Flip the **Developer mode** toggle in the top-right corner.
 
 ### 4. Load the extension
 
-Click **Load unpacked** (top-left) and choose the `salat-clocker` folder — the
-one that contains `manifest.json`, **not** its parent.
+Click **Load unpacked** (top-left) and choose the folder you unzipped — the one
+that contains `manifest.json` (the repo's own root, not its parent).
 
 ![Load unpacked](docs/step4-load-unpacked.png)
 
